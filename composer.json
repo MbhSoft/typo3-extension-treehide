@@ -1,0 +1,20 @@
+{
+  "name": "mbhsoft/treehide",
+  "type": "typo3-cms-extension",
+  "description": "",
+  "homepage": "http://www.mbh-software.de",
+  "license": "proprietary",
+  "require": {
+    "typo3/cms-core": "^10.4 || ^11.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "MbhSoftware\\Treehide\\": "Classes"
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "treehide"
+    }
+  }
+}
