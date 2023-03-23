@@ -1,20 +1,20 @@
 <?php
 
 $EM_CONF['treehide'] = [
-    'title' => 'Hide / unhide pages recursive',
-    'description' => '',
-    'category' => '',
+    'title' => 'Treehide',
+    'description' => 'Adds context menu items to hide and unhide pages recursive',
+    'category' => 'misc',
     'author' => 'Marc Bastian Heinrichs',
-    'author_email' => 'mbh@mbh-software.de',
-    'state' => 'alpha',
-    'author_company' => '',
-    'version' => '1.0.0-dev',
+    'author_email' => 'typo3@mbh-software.de',
+    'author_company' => 'MBH Softwarelösungen',
+    'state' => 'stable',
+    'uploadfolder' => false,
+    'createDirs' => '',
+    'clearCacheOnLoad' => true,
+    'version' => '0.9.0',
     'constraints' => [
-        'depends' => [
-        ],
-        'conflicts' => [
-        ],
-        'suggests' => [
-        ],
+        'depends' => ['typo3' => '10.4.0-11.5.99'],
+        'conflicts' => [],
+        'suggests' => [],
     ],
 ];

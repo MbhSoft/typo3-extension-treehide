@@ -1,20 +1,48 @@
 {
-  "name": "mbhsoft/treehide",
-  "type": "typo3-cms-extension",
-  "description": "",
-  "homepage": "http://www.mbh-software.de",
-  "license": "proprietary",
-  "require": {
-    "typo3/cms-core": "^10.4 || ^11.5"
-  },
-  "autoload": {
-    "psr-4": {
-      "MbhSoftware\\Treehide\\": "Classes"
-    }
-  },
-  "extra": {
-    "typo3/cms": {
-      "extension-key": "treehide"
-    }
-  }
+	"name": "mbhsoft/treehide",
+	"type": "typo3-cms-extension",
+	"description": "Adds context menu items to hide and unhide pages recursive",
+	"homepage": "http://www.mbh-software.de",
+	"authors": [
+		{
+			"name": "Marc Bastian Heinrichs",
+			"role": "Developer"
+		}
+	],
+	"license": [
+		"GPL-2.0-or-later"
+	],
+	"require": {
+		"typo3/cms-core": "^10.4 || ^11.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"MbhSoftware\\Treehide\\": "Classes"
+		}
+	},
+	"config": {
+		"vendor-dir": ".build/vendor",
+		"bin-dir": ".build/bin",
+		"allow-plugins": {
+			"typo3/class-alias-loader": true,
+			"typo3/cms-composer-installers": true
+		}
+	},
+	"require-dev": {
+		"friendsofphp/php-cs-fixer": "~3.9.0",
+		"typo3/coding-standards": "^0.5.0"
+	},
+	"scripts": {
+		"php-cs-fixer": [
+			"@php -dxdebug.mode=off .build/bin/php-cs-fixer fix -v --dry-run --config=Build/php-cs-fixer.php --using-cache=no"
+		]
+	},
+	"extra": {
+		"typo3/cms": {
+			"cms-package-dir": "{$vendor-dir}/typo3/cms",
+			"web-dir": ".build/Web",
+			"app-dir": ".build",
+			"extension-key": "treehide"
+		}
+	}
 }
