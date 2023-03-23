@@ -21,6 +21,7 @@ define(["require", "exports", "jquery", "TYPO3/CMS/Core/Ajax/AjaxRequest","TYPO3
         if (!0 === t.success) {
           Notification.success(t.title, t.message, 2);
           document.dispatchEvent(new CustomEvent("typo3:pagetree:refresh"));
+          Viewport.ContentContainer.setUrl(top.list_frame.document.location.pathname + top.list_frame.document.location.search);
         } else {
           Notification.error(t.title, t.message, 2)
           ContextMenuActions.nodesRemovePlaceholder();

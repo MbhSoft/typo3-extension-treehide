@@ -38,7 +38,13 @@ class HidePagesRecursiveController
             $fieldName = $GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled'];
             $data['pages'][$pageUid][$fieldName] = $mode;
             $subPages = [];
-            $this->getPageTreeInfo($pageUid, 99, $subPages);
+            $sysLanguage = 0;
+            $page = $this->getPageInfo($pageUid);
+            if ($page['sys_language_uid'] > 0) {
+                $sysLanguage = $page['sys_language_uid'];
+                $pageUid = $page['l10n_parent'];
+            }
+            $this->getPageTreeInfo($pageUid, 99, $subPages, $sysLanguage);
             foreach ($subPages as $subPage) {
                 $data['pages'][$subPage][$fieldName] = $mode;
             }
@@ -54,18 +60,18 @@ class HidePagesRecursiveController
         ]);
     }
 
-    protected function getPageTreeInfo(int $pid, int $levels = 99, array &$CPtable = []): array
+    protected function getPageTreeInfo(int $pid, int $levels = 99, array &$CPtable = [], $sysLanguage = 0): array
     {
         if ($levels > 0) {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
             $restrictions = $queryBuilder->getRestrictions()->removeAll();
             $restrictions->add(GeneralUtility::makeInstance(DeletedRestriction::class));
             $queryBuilder
-                ->select('uid')
+                ->select('uid', 'l10n_parent')
                 ->from('pages')
                 ->where(
                     $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, \PDO::PARAM_INT)),
-                    $queryBuilder->expr()->eq('sys_language_uid', 0),
+                    $queryBuilder->expr()->eq('sys_language_uid', $sysLanguage),
                 );
             $result = $queryBuilder->execute();
 
@@ -77,12 +83,35 @@ class HidePagesRecursiveController
             foreach ($pages as $page) {
                 $CPtable[] = $page['uid'];
                 if ($levels - 1) {
-                    $CPtable = $this->getPageTreeInfo($page['uid'], $levels - 1, $CPtable);
+                    $CPtable = $this->getPageTreeInfo($sysLanguage > 0 ? $page['l10n_parent'] : $page['uid'], $levels - 1, $CPtable, $sysLanguage);
                 }
             }
         }
         return $CPtable;
     }
+
+    protected function getPageInfo(int $uid): ?array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+        $restrictions = $queryBuilder->getRestrictions()->removeAll();
+        $restrictions->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+        $queryBuilder
+            ->select('*')
+            ->from('pages')
+            ->where(
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
+            );
+        $result = $queryBuilder->execute();
+
+        $row = $result->fetchAssociative();
+        if (!is_array($row)) {
+            $row = null;
+        }
+
+        return $row;
+    }
+
+
 
     protected function getBackendUserAuthentication(): BackendUserAuthentication
     {
