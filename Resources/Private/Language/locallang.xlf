@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:treehide/Resources/Private/Language/locallang.xlf" date="2023-03-22T20:43:05Z" product-name="treehide">
+		<header/>
+		<body>
+			<trans-unit id="hideRecursive" resname="hideRecursive">
+				<source>Hide recursive</source>
+			</trans-unit>
+			<trans-unit id="unhideRecursive" resname="unhideRecursive">
+				<source>Unhide recursive</source>
+			</trans-unit>
+			<trans-unit id="treehide.title" resname="treehide.title">
+				<source>Treehide</source>
+			</trans-unit>
+			<trans-unit id="treehide.message.success" resname="treehide.message.success">
+				<source>Successfully changed all pages</source>
+			</trans-unit>
+			<trans-unit id="treehide.message.error" resname="treehide.message.error">
+				<source>Something went wrong</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
