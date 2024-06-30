@@ -1,0 +1,2 @@
+# cat=basic; type=boolean; label=Enable for non-admins
+allowForNonAdmin = 0
