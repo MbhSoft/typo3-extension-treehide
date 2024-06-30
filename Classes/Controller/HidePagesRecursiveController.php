@@ -34,19 +34,20 @@ class HidePagesRecursiveController
         $mode = (int)($parsedBody['mode'] ?? $queryParams['mode'] ?? 0);
         $message = $this->getLanguageService()->sL('LLL:EXT:treehide/Resources/Private/Language/locallang.xlf:treehide.message.error');
         $success = false;
-        if ($pageUid !== 0 && $this->getBackendUserAuthentication()->isAdmin()) {
+        if ($pageUid !== 0) {
             $fieldName = $GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled'];
             $data['pages'][$pageUid][$fieldName] = $mode;
+            $page = $this->getPageInfo($pageUid);
             $subPages = [];
             $sysLanguage = 0;
-            $page = $this->getPageInfo($pageUid);
+
             if ($page['sys_language_uid'] > 0) {
                 $sysLanguage = $page['sys_language_uid'];
                 $pageUid = $page['l10n_parent'];
             }
             $this->getPageTreeInfo($pageUid, 99, $subPages, $sysLanguage);
             foreach ($subPages as $subPage) {
-                $data['pages'][$subPage][$fieldName] = $mode;
+                    $data['pages'][$subPage][$fieldName] = $mode;
             }
             $this->dataHandler->start($data, []);
             $this->dataHandler->process_datamap();
