@@ -37,7 +37,7 @@
 	},
 	"scripts": {
 		"php-cs-fixer": [
-			"@php -dxdebug.mode=off .build/bin/php-cs-fixer fix -v --dry-run --config=Build/php-cs-fixer.php --using-cache=no"
+			"@php -dxdebug.mode=off .build/bin/php-cs-fixer fix -v --config=Build/php-cs-fixer.php --using-cache=no"
 		]
 	},
 	"extra": {
