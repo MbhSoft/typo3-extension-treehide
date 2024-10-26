@@ -13,7 +13,7 @@ $EM_CONF['treehide'] = [
     'clearCacheOnLoad' => true,
     'version' => '0.10.0',
     'constraints' => [
-        'depends' => ['typo3' => '10.4.0-11.5.99'],
+        'depends' => ['typo3' => '10.4.0-12.4.99'],
         'conflicts' => [],
         'suggests' => [],
     ],
