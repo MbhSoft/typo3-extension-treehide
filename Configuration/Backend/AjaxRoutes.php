@@ -6,4 +6,3 @@ return [
         'target' => \MbhSoftware\Treehide\Controller\HidePagesRecursiveController::class . '::mainAction',
     ],
 ];
-
