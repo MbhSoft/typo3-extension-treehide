@@ -111,8 +111,6 @@ class HidePagesRecursiveController
         return $row;
     }
 
-
-
     protected function getBackendUserAuthentication(): BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
