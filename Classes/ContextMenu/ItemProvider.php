@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace MbhSoftware\Treehide\ContextMenu;
 
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\PageProvider;
-use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class ItemProvider
@@ -68,15 +66,8 @@ class ItemProvider extends PageProvider
      */
     protected function getAdditionalAttributes(string $itemName): array
     {
-        $callbackModule = '@mbhsoft/treehide/ContextMenuActions';
-        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        if ($typo3Version->getMajorVersion() === 10) {
-            $callbackModule = 'TYPO3/CMS/Treehide/ContextMenuActions10';
-        } else if ($typo3Version->getMajorVersion() === 11) {
-            $callbackModule = 'TYPO3/CMS/Treehide/ContextMenuActions11';
-        }
         return [
-            'data-callback-module' => $callbackModule,
+            'data-callback-module' => '@mbhsoft/treehide/ContextMenuActions',
             'data-mode' => $itemName === 'hidePagesRecursive' ? 1 : 0,
         ];
     }

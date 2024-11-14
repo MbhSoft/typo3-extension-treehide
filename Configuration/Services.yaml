@@ -1,9 +1,12 @@
 services:
   _defaults:
     autowire: true
-    autoconfigure: true
+    autoconfigure: false
     public: false
 
   MbhSoftware\Treehide\:
     resource: '../Classes/*'
 
+  MbhSoftware\Treehide\ContextMenu\ItemProvider:
+    tags:
+      - name: 'backend.contextmenu.itemprovider'
