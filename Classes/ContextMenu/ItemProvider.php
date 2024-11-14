@@ -68,9 +68,12 @@ class ItemProvider extends PageProvider
      */
     protected function getAdditionalAttributes(string $itemName): array
     {
-        $callbackModule = 'TYPO3/CMS/Treehide/ContextMenuActions';
-        if ((string)GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() === '10') {
+        $callbackModule = '@mbhsoft/treehide/ContextMenuActions';
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if ($typo3Version->getMajorVersion() === 10) {
             $callbackModule = 'TYPO3/CMS/Treehide/ContextMenuActions10';
+        } else if ($typo3Version->getMajorVersion() === 11) {
+            $callbackModule = 'TYPO3/CMS/Treehide/ContextMenuActions11';
         }
         return [
             'data-callback-module' => $callbackModule,

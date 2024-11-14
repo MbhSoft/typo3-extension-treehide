@@ -1,5 +1,16 @@
 <?php
 
-defined('TYPO3_MODE') or die();
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-$GLOBALS['TYPO3_CONF_VARS']['BE']['ContextMenu']['ItemProviders'][1679500180] = \MbhSoftware\Treehide\ContextMenu\ItemProvider::class;
+defined('TYPO3') || die();
+
+(static function () {
+
+    $versionInformation = GeneralUtility::makeInstance(Typo3Version::class);
+
+    if ($versionInformation->getMajorVersion() < 12) {
+        $GLOBALS['TYPO3_CONF_VARS']['BE']['ContextMenu']['ItemProviders'][1679500180] = \MbhSoftware\Treehide\ContextMenu\ItemProvider::class;
+    }
+
+})();
