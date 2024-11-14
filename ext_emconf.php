@@ -11,7 +11,7 @@ $EM_CONF['treehide'] = [
     'uploadfolder' => false,
     'createDirs' => '',
     'clearCacheOnLoad' => true,
-    'version' => '2.0.0-dev',
+    'version' => '2.0.0',
     'constraints' => [
         'depends' => ['typo3' => '12.4.0-12.4.99'],
         'conflicts' => [],
