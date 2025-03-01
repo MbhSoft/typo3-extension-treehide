@@ -18,6 +18,10 @@
 			<trans-unit id="treehide.message.error" resname="treehide.message.error">
 				<source>Something went wrong</source>
 			</trans-unit>
+			<trans-unit id="treehide.message.someSkippedDueToPermissions" resname="treehide.message.someSkippedDueToPermissions">
+				<source>Some page(s) skipped due to permissions</source>
+			</trans-unit>
+
 		</body>
 	</file>
 </xliff>

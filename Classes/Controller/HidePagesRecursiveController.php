@@ -6,12 +6,14 @@ namespace MbhSoftware\Treehide\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -28,6 +30,8 @@ class HidePagesRecursiveController
 
     public function mainAction(ServerRequestInterface $request): ResponseInterface
     {
+        $data = [];
+        $skippedRecordsDueToPermissions=0;
         $parsedBody = $request->getParsedBody();
         $queryParams = $request->getQueryParams();
         $pageUid = (int)($parsedBody['id'] ?? $queryParams['id'] ?? 0);
@@ -36,7 +40,11 @@ class HidePagesRecursiveController
         $success = false;
         if ($pageUid !== 0) {
             $fieldName = $GLOBALS['TCA']['pages']['ctrl']['enablecolumns']['disabled'];
-            $data['pages'][$pageUid][$fieldName] = $mode;
+            if ($this->isPageEditable($pageUid)) {
+                $data['pages'][$pageUid][$fieldName] = $mode;
+            } else {
+                $skippedRecordsDueToPermissions++;
+            }
             $page = $this->getPageInfo($pageUid);
             $subPages = [];
             $sysLanguage = 0;
@@ -47,18 +55,38 @@ class HidePagesRecursiveController
             }
             $this->getPageTreeInfo($pageUid, 99, $subPages, $sysLanguage);
             foreach ($subPages as $subPage) {
+                if ($this->isPageEditable((int)$subPage)) {
                     $data['pages'][$subPage][$fieldName] = $mode;
+                } else {
+                    $skippedRecordsDueToPermissions++;
+                }
             }
-            $this->dataHandler->start($data, []);
-            $this->dataHandler->process_datamap();
-            $message = $this->getLanguageService()->sL('LLL:EXT:treehide/Resources/Private/Language/locallang.xlf:treehide.message.success');
+            if ($data) {
+                $this->dataHandler->start($data, []);
+                $this->dataHandler->process_datamap();
+            }
+            if ($skippedRecordsDueToPermissions > 0) {
+                $message = $this->getLanguageService()->sL('LLL:EXT:treehide/Resources/Private/Language/locallang.xlf:treehide.message.someSkippedDueToPermissions');
+            } else {
+                $message = $this->getLanguageService()->sL('LLL:EXT:treehide/Resources/Private/Language/locallang.xlf:treehide.message.success');
+            }
             $success = true;
+
         }
         return new JsonResponse([
             'success' => $success,
             'title' => $this->getLanguageService()->sL('LLL:EXT:treehide/Resources/Private/Language/locallang.xlf:treehide.title'),
             'message' => $message,
         ]);
+    }
+
+    protected function isPageEditable(int $pageId): bool
+    {
+        if ($this->getBackendUserAuthentication()->isAdmin()) {
+            return true;
+        }
+        $result = BackendUtility::readPageAccess($pageId, $this->getBackendUserAuthentication()->getPagePermsClause(Permission::PAGE_EDIT));
+        return $result !== false;
     }
 
     protected function getPageTreeInfo(int $pid, int $levels = 99, array &$CPtable = [], $sysLanguage = 0): array
