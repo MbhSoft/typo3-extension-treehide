@@ -62,4 +62,4 @@ class ContextMenuActions {
 
 }
 
-export default new ContextMenuActions;
+export default new ContextMenuActions();
