@@ -7,6 +7,7 @@ namespace MbhSoftware\Treehide\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
@@ -21,7 +22,7 @@ class HidePagesRecursiveController
 {
     protected DataHandler $dataHandler;
 
-    public function __construct()
+    public function __construct(private readonly ConnectionPool $connectionPool)
     {
         $this->dataHandler = GeneralUtility::makeInstance(DataHandler::class);
     }
@@ -63,17 +64,17 @@ class HidePagesRecursiveController
     protected function getPageTreeInfo(int $pid, int $levels = 99, array &$CPtable = [], $sysLanguage = 0): array
     {
         if ($levels > 0) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+            $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
             $restrictions = $queryBuilder->getRestrictions()->removeAll();
             $restrictions->add(GeneralUtility::makeInstance(DeletedRestriction::class));
             $queryBuilder
                 ->select('uid', 'l10n_parent')
                 ->from('pages')
                 ->where(
-                    $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, \PDO::PARAM_INT)),
+                    $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)),
                     $queryBuilder->expr()->eq('sys_language_uid', $sysLanguage),
                 );
-            $result = $queryBuilder->execute();
+            $result = $queryBuilder->executeQuery();
 
             $pages = [];
             while ($row = $result->fetchAssociative()) {
@@ -92,16 +93,16 @@ class HidePagesRecursiveController
 
     protected function getPageInfo(int $uid): ?array
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
         $restrictions = $queryBuilder->getRestrictions()->removeAll();
         $restrictions->add(GeneralUtility::makeInstance(DeletedRestriction::class));
         $queryBuilder
             ->select('*')
             ->from('pages')
             ->where(
-                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT))
             );
-        $result = $queryBuilder->execute();
+        $result = $queryBuilder->executeQuery();
 
         $row = $result->fetchAssociative();
         if (!is_array($row)) {

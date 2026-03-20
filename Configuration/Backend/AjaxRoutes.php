@@ -1,8 +1,10 @@
 <?php
 
+use MbhSoftware\Treehide\Controller\HidePagesRecursiveController;
+
 return [
     'treehide_hidepagesrecursive' => [
         'path' => '/treehide/hidepagesrecursive',
-        'target' => \MbhSoftware\Treehide\Controller\HidePagesRecursiveController::class . '::mainAction',
+        'target' => HidePagesRecursiveController::class . '::mainAction',
     ],
 ];
