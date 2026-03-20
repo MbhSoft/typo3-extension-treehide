@@ -13,7 +13,9 @@
 		"GPL-2.0-or-later"
 	],
 	"require": {
-		"typo3/cms-core": "^12.4 || ^13.4"
+		"php": ">=8.2",
+		"typo3/cms-backend": "^13.4",
+		"typo3/cms-core": "^13.4"
 	},
 	"autoload": {
 		"psr-4": {
@@ -29,8 +31,9 @@
 		}
 	},
 	"require-dev": {
-		"friendsofphp/php-cs-fixer": "~3.64.0",
-		"typo3/coding-standards": "~0.8.0"
+		"friendsofphp/php-cs-fixer": "3.94.2",
+		"ssch/typo3-rector": "^3.0.0",
+		"typo3/coding-standards": "dev-main"
 	},
 	"scripts": {
 		"php-cs-fixer": [
@@ -39,9 +42,7 @@
 	},
 	"extra": {
 		"typo3/cms": {
-			"cms-package-dir": "{$vendor-dir}/typo3/cms",
-			"web-dir": ".build/Web",
-			"app-dir": ".build",
+			"web-dir": ".build/web",
 			"extension-key": "treehide"
 		}
 	}

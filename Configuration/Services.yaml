@@ -10,3 +10,6 @@ services:
   MbhSoftware\Treehide\ContextMenu\ItemProvider:
     tags:
       - name: 'backend.contextmenu.itemprovider'
+
+  MbhSoftware\Treehide\Controller\HidePagesRecursiveController:
+    public: true

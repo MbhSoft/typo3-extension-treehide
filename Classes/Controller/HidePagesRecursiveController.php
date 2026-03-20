@@ -22,7 +22,7 @@ class HidePagesRecursiveController
 {
     protected DataHandler $dataHandler;
 
-    public function __construct()
+    public function __construct(private readonly ConnectionPool $connectionPool)
     {
         $this->dataHandler = GeneralUtility::makeInstance(DataHandler::class);
     }
@@ -64,7 +64,7 @@ class HidePagesRecursiveController
     protected function getPageTreeInfo(int $pid, int $levels = 99, array &$CPtable = [], $sysLanguage = 0): array
     {
         if ($levels > 0) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+            $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
             $restrictions = $queryBuilder->getRestrictions()->removeAll();
             $restrictions->add(GeneralUtility::makeInstance(DeletedRestriction::class));
             $queryBuilder
@@ -93,7 +93,7 @@ class HidePagesRecursiveController
 
     protected function getPageInfo(int $uid): ?array
     {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
         $restrictions = $queryBuilder->getRestrictions()->removeAll();
         $restrictions->add(GeneralUtility::makeInstance(DeletedRestriction::class));
         $queryBuilder
